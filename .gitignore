@@ -20,7 +20,7 @@ build/
 # Data outputs (may contain extracted PII)
 data/extracted/
 *.json
-!data/sample_output/*.json
+!data/sample_output/example_*.json
 
 # OS
 .DS_Store

@@ -1,0 +1,20 @@
+[
+    {
+        "issue_type": "missing_specificity",
+        "quote": "within 28 days prior to enrollment.",
+        "concern": "The timeframe 'within 28 days' is not specific. Is it a hard deadline or a guideline?",
+        "suggested_fix": "Replace with a specific timeframe, e.g., 'within 30 days prior to enrollment.'"
+    },
+    {
+        "issue_type": "ambiguity",
+        "quote": "screen failure A patient who does not meet 1 or more criteria required for participation in a study.",
+        "concern": "The definition of 'screen failure' is unclear. Does it refer to a single criterion or multiple?",
+        "suggested_fix": "Rephrase to 'screen failure: a patient who does not meet one or more of the specified criteria for participation in the study.'"
+    },
+    {
+        "issue_type": "guideline_conflict",
+        "quote": "Prospective approval of protocol deviations to recruitment and enrollment criteria, also known as protocol waivers or exemptions, is not permitted.",
+        "concern": "This statement conflicts with ICH E6 and FDA 21 CFR Part 312 requirements, which allow for protocol deviations with proper justification.",
+        "suggested_fix": "Rephrase to 'Protocol deviations to recruitment and enrollment criteria may be approved on a case-by-case basis, with proper justification and documentation.'"
+    }
+]

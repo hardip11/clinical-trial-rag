@@ -1,1 +1,224 @@
-# clinical-trial-rag
+# 🏥 Clinical Trial RAG Pipeline
+
+> **Regulatory-grade document intelligence for clinical trial protocols.**  
+> Hybrid semantic + keyword retrieval · Multi-agent audit · Confidence-scored answers · Quantitative evaluation
+
+---
+
+## What this does
+
+Clinical trial protocols are dense, table-heavy documents where a single misread number — a performance score threshold, a washout period, a contraceptive requirement — can delay a regulatory submission by months.
+
+This pipeline turns a raw protocol PDF into a **queryable, auditable knowledge system** with four properties that matter in a clinical setting:
+
+| Property | Implementation |
+|----------|----------------|
+| **Accuracy** | PubMedBERT embeddings understand medical synonyms |
+| **Completeness** | Hybrid BM25 + semantic retrieval catches what either alone misses |
+| **Traceability** | Every answer is linked back to source pages |
+| **Safety** | Deterministic audit layer flags threshold violations before outputs are trusted |
+
+---
+
+## Architecture
+
+```
+Protocol PDF
+     │
+     ├─► PyPDFLoader (prose sections)
+     └─► UnstructuredPDFLoader (table-aware, §6.1 pages)
+               │
+               ▼
+        Text Chunking (1200 chars, 200 overlap)
+               │
+     ┌─────────┴──────────┐
+     │                    │
+BM25 Retriever       FAISS Vector Store
+(exact match)        (PubMedBERT semantic)
+     │                    │
+     └─────────┬──────────┘
+               │  Hybrid Merge (deduplicated)
+               ▼
+    ┌──────────────────────┐
+    │   Prompt Layer       │
+    │  · Clinical QA       │
+    │  · JSON Extraction   │
+    │  · Ambiguity Detect  │
+    │  · Confidence Score  │
+    └──────────┬───────────┘
+               ▼
+    ┌──────────────────────┐
+    │   Multi-Agent Audit  │
+    │  Agent 2: Rulebook   │  ← deterministic (fast, reproducible)
+    │  Agent 3: LLM Review │  ← semantic verification
+    └──────────┬───────────┘
+               ▼
+    ┌──────────────────────┐
+    │  RAGAS Evaluation    │
+    │  · Faithfulness      │
+    │  · Context Precision │
+    └──────────────────────┘
+```
+
+---
+
+## Project Structure
+
+```
+clinical-trial-rag/
+├── main.py                      ← run this for the full interactive pipeline
+├── notebooks/
+│   └── CT_RAG_Pipeline.ipynb   ← step-by-step walkthrough of all phases
+├── src/
+│   ├── prompts.py               ← all prompt templates (6 roles)
+│   ├── ingestion.py             ← PDF loading + chunking + vector store
+│   ├── retrieval.py             ← HybridRetriever class
+│   └── evaluation.py           ← RegulatoryAuditor + RAGAS scoring
+├── data/
+│   └── sample_output/
+│       └── CAMPFIRE_Inclusion_Criteria.json   ← example extraction artifact
+├── .env.example                 ← copy to .env, add your HF token
+├── .gitignore
+└── requirements.txt
+```
+
+---
+
+## Quickstart
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/hardip11/clinical-trial-rag.git
+cd clinical-trial-rag
+pip install -r requirements.txt
+```
+
+### 2. Set your API token
+
+```bash
+cp .env.example .env
+# Edit .env and add your Hugging Face token
+# Get one at https://huggingface.co/settings/tokens
+```
+
+### 3. Add your protocol PDF
+
+Place your clinical trial protocol PDF in the project root and name it `Protocol.pdf`.
+
+### 4. Run the pipeline
+
+```bash
+python main.py
+```
+
+This runs all 4 phases automatically, then enters an interactive Q&A session where you can ask questions about the protocol. All outputs are saved to `data/sample_output/`.
+
+Alternatively, open the notebook for a step-by-step walkthrough:
+
+```bash
+jupyter notebook notebooks/CT_RAG_Pipeline.ipynb
+```
+
+---
+
+## What `python main.py` does
+
+**Automatic phases:**
+1. Ingests the protocol PDF via dual loaders (standard + table-aware)
+2. Extracts structured eligibility criteria as validated JSON
+3. Runs two audit agents — deterministic rulebook + LLM second-pass
+4. Scans for regulatory risk flags (ambiguous language, missing specificity)
+5. Runs a 4-query evaluation suite and scores faithfulness + context precision
+
+**Then enters interactive mode:**
+- Ask any question about the protocol in plain English
+- Every answer includes a confidence score (0–100) and source page references
+- Full session is saved to `data/sample_output/session_timestamp.json`
+- Type `quit` to exit
+
+**All outputs saved automatically:**
+
+| File | Contents |
+|------|----------|
+| `extraction_timestamp.json` | Structured criteria extracted from the protocol |
+| `audit_report_timestamp.json` | Full audit findings from both agents |
+| `risk_flags_timestamp.json` | Regulatory risk flags with suggested fixes |
+| `evaluation_timestamp.json` | RAGAS-style scores across the test suite |
+| `session_timestamp.json` | Your interactive Q&A session log |
+
+---
+
+## Four Phases
+
+### Phase 1 · Ingestion
+Loads the PDF via two complementary strategies. Standard loading handles prose sections quickly. Table-aware loading (Unstructured) targets pages with numerical criteria and preserves row/column relationships that plain text extraction destroys.
+
+### Phase 2 · Structured Extraction
+Extracts clinical criteria as schema-constrained JSON. A sanitizer strips markdown artifacts from the LLM output before parsing. A retry prompt handles malformed responses. Results are written to disk as a versioned artifact.
+
+### Phase 3 · Multi-Agent Audit
+Two agents validate the extraction:
+- **Agent 2 (Deterministic):** Checks numeric thresholds, standard terminology, and age-group coverage against a configurable rulebook. Fast, reproducible, no LLM required.
+- **Agent 3 (LLM Second-Pass):** Re-reads the source context to semantically verify the extraction. Catches subtle errors deterministic rules miss.
+
+### Phase 3.5 · Ambiguity Detector *(creative addition)*
+A Devil's Advocate agent that scans the protocol for language that could cause regulatory delay: ambiguous phrasing, missing specificity, or potential ICH/FDA guideline conflicts. Each finding includes a suggested fix.
+
+### Phase 4 · Quantitative Evaluation
+Runs a golden-dataset test suite and scores the pipeline on faithfulness (no hallucinations) and context precision (retriever found the right source pages). Includes confidence-scored answers and a 3-query stress test covering comparison, negative constraint, and precise data extraction.
+
+---
+
+## Prompt Design
+
+All prompts live in `src/prompts.py`. Each follows the same structure:
+
+```
+[Role statement] — who the model is playing
+[Output format rules] — schema, no markdown fences, null for missing
+[Fallback instruction] — what to say if the answer isn't in context
+[Structured input] — context and question in XML-like tags
+[Chain-of-thought trigger] — "Think step by step"
+```
+
+Six prompt templates:
+
+| Template | Purpose |
+|----------|---------|
+| `CLINICAL_QA_PROMPT` | General protocol questions |
+| `JSON_EXTRACTION_PROMPT` | Single-record structured extraction |
+| `JSON_LIST_EXTRACTION_PROMPT` | Multi-record extraction (all age groups) |
+| `AMBIGUITY_DETECTION_PROMPT` | Regulatory risk flagging |
+| `CONFIDENCE_SCORED_PROMPT` | Answer + uncertainty quantification |
+| `AUDITOR_REVIEW_PROMPT` | LLM second-pass verification |
+
+---
+
+## Security
+
+- API tokens are loaded from `.env` via `python-dotenv` — never hardcoded
+- `.env` is in `.gitignore` — never committed
+- A `.env.example` template is provided so collaborators know what's needed
+
+---
+
+## Dependencies
+
+| Package | Role |
+|---------|------|
+| `langchain` + `langchain-community` | RAG orchestration |
+| `langchain-huggingface` | HF model integration |
+| `faiss-cpu` | Vector similarity search |
+| `sentence-transformers` | PubMedBERT embeddings |
+| `rank-bm25` | Keyword retrieval |
+| `pypdf` | Standard PDF loading |
+| `unstructured[pdf]` | Table-aware PDF parsing |
+| `python-dotenv` | Secure credential management |
+| `pandas` | Tabular output and display |
+
+---
+
+## License
+
+MIT

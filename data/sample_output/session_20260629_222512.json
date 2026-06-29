@@ -1,0 +1,17 @@
+[
+    {
+        "query": "What is the minimum Lansky score required for patients under 16?",
+        "answer": "Based on the provided context, I will answer the question.\n\n**Relevant section(s):** The relevant section is \"The patient has a Lansky (<16 years of age; Lansky et al. 1987) or Karnofsky (\u226516 years of age; Karnofsky et al. 1948) performance score of at least 50.\" [4]\n\n**Extracted exact values or criteria:** The minimum Lansky score required for patients under 16 is not explicitly stated. However, the relevant section mentions that the patient must have a Lansky performance score of at least 50, without specifying a minimum score for patients under 16.\n\n**Answer:** Not specified in the provided context.",
+        "confidence": "N/A"
+    },
+    {
+        "query": "Can a patient with a history of organ transplant enroll in the study?",
+        "answer": "Based on the provided context, I will answer the question step by step:\n\n1. Relevant section(s): 9.2.2. Suspected Unexpected Serious Adverse Reactions and 9.2.2. Surgery\n2. Extracted values or criteria:\n\t* Patients who have had allogeneic bone marrow or solid organ transplant are excluded. [10]\n\t* Major surgical procedure, laparoscopic procedure, or significant traumatic injury within 28 days prior to enrollment. [11]\n3. Note page numbers: 9.2.2. (not specified in the provided context)\n\nAnswer: According to the context, patients who have had allogeneic bone marrow or solid organ transplant are excluded from the study. Therefore, a patient with a history of organ transplant cannot enroll in the study.",
+        "confidence": "N/A"
+    },
+    {
+        "query": "What contraceptive requirements apply to male patients?",
+        "answer": "Based on the provided context, I will answer the question step by step:\n\n1. Identify the relevant section(s) in the context above:\nThe relevant sections are 6.3. Lifestyle Restrictions and 6.4. Contraception Requirements.\n\n2. Extract exact values or criteria, preserving any age/group qualifiers:\nFor male patients, the following contraceptive requirements apply:\n\n* Males, regardless of their fertility status, with nonpregnant FOCBP partners must agree to use condoms as well as one additional highly effective method of contraception (less than 1% failure rate; includes combination oral contraceptives, implanted contraceptives, or intrauterine devices) for the duration of the study and up to 3 months following the last dose of study drug, or longer, if appropriate for other study drugs according to their label in order to prevent pregnancy. (Page 18)\n* Males with pregnant partners should use condoms during intercourse for the duration of the study and for at least 3 months after the last dose of study drug. (Page 25)\n\nNote that there is no specific mention of age or group qualifiers for male patients in the provided context.",
+        "confidence": "N/A"
+    }
+]

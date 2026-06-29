@@ -1,0 +1,20 @@
+[
+    {
+        "issue_type": "missing_specificity",
+        "quote": "within 28 days prior to enrollment.",
+        "concern": "The timeframe 'within 28 days' is missing units (e.g., days, weeks, months). This could lead to regulatory delay or audit findings.",
+        "suggested_fix": "Specify the exact timeframe, e.g., 'within 28 days (or 4 weeks)'"
+    },
+    {
+        "issue_type": "ambiguity",
+        "quote": "screen failure A patient who does not meet 1 or more criteria required for participation in a study.",
+        "concern": "The phrase '1 or more' is ambiguous and could be interpreted as either 'one or more' or 'at least one'. This could lead to inconsistent application of the criteria.",
+        "suggested_fix": "Specify the exact phrase, e.g., 'at least one' or 'one or more'"
+    },
+    {
+        "issue_type": "guideline_conflict",
+        "quote": "Prospective approval of protocol deviations to recruitment and enrollment criteria, also known as protocol waivers or exemptions, is not permitted.",
+        "concern": "This statement conflicts with ICH E6 and FDA 21 CFR Part 312 requirements, which allow for protocol deviations and waivers in certain circumstances.",
+        "suggested_fix": "Rephrase the statement to align with regulatory guidelines, e.g., 'Protocol deviations and waivers may be considered on a case-by-case basis, subject to approval by the sponsor and regulatory authorities'"
+    }
+]

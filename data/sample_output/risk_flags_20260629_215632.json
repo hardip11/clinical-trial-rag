@@ -1,0 +1,20 @@
+[
+    {
+        "issue_type": "missing_specificity",
+        "quote": "within 28 days prior to enrollment.",
+        "concern": "The timeframe 'within 28 days' is not specific and could be interpreted in different ways.",
+        "suggested_fix": "Replace with a specific timeframe, e.g., 'within 4 weeks prior to enrollment.'"
+    },
+    {
+        "issue_type": "ambiguity",
+        "quote": "re-screened only after discussion with and with permission from the Lilly CRP/CRS or designee.",
+        "concern": "The phrase 'or designee' is ambiguous and could be interpreted as allowing anyone to re-screen, rather than specifically the Lilly CRP/CRS.",
+        "suggested_fix": "Remove 'or designee' to clarify the intended meaning."
+    },
+    {
+        "issue_type": "guideline_conflict",
+        "quote": "Prospective approval of protocol deviations to recruitment and enrollment criteria, also known as protocol waivers or exemptions, is not permitted.",
+        "concern": "This statement conflicts with ICH E6 and FDA 21 CFR Part 312 requirements, which allow for protocol deviations and waivers in certain circumstances.",
+        "suggested_fix": "Rephrase to align with regulatory guidelines, e.g., 'Protocol deviations to recruitment and enrollment criteria may be approved on a case-by-case basis, subject to regulatory review and approval.'"
+    }
+]

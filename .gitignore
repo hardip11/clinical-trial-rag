@@ -1,0 +1,29 @@
+# Secrets — NEVER commit these
+.env
+*.env
+
+
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data outputs (may contain extracted PII)
+data/extracted/
+*.json
+!data/sample_output/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+data/cache/

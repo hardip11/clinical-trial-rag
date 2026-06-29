@@ -67,18 +67,16 @@ BM25 Retriever       FAISS Vector Store
 ```
 clinical-trial-rag/
 ├── main.py                      ← run this for the full interactive pipeline
-├── notebooks/
-│   └── CT_RAG_Pipeline.ipynb   ← step-by-step walkthrough of all phases
 ├── src/
 │   ├── prompts.py               ← all prompt templates (6 roles)
 │   ├── ingestion.py             ← PDF loading + chunking + vector store
 │   ├── retrieval.py             ← HybridRetriever class
-│   └── evaluation.py           ← RegulatoryAuditor + RAGAS scoring
+│   └── evaluation.py            ← RegulatoryAuditor + RAGAS scoring
 ├── data/
 │   ├── Protocol.pdf             ← place your protocol PDF here
 │   ├── cache/                   ← auto-generated cache (gitignored)
 │   └── sample_output/           ← all pipeline outputs saved here
-├── .env.example                 ← copy to .env, add your HF token
+├── .env                
 ├── .gitignore
 └── requirements.txt
 ```

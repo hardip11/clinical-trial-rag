@@ -1,5 +1,6 @@
 {
-    "timestamp": "20260629_215632",
+    "timestamp": "20260629_225936",
+    "scoring_note": "Faithfulness uses keyword-term matching as a hallucination proxy. For production, replace with an LLM-as-judge entailment prompt.",
     "results": [
         {
             "query": "What are the specific Lansky and Karnofsky score requirements in Section 6.1?",
@@ -22,7 +23,7 @@
         {
             "query": "What is the primary rationale for using a master protocol in the CAMPFIRE study?",
             "faithfulness": 1.0,
-            "context_precision": 0.0,
+            "context_precision": 1.0,
             "retrieved_pages": [
                 "8",
                 "9",
@@ -35,13 +36,15 @@
                 "10",
                 "11",
                 "10",
-                "11"
+                "11",
+                "12",
+                "12"
             ]
         },
         {
             "query": "How is End of Study defined for an individual investigation?",
             "faithfulness": 1.0,
-            "context_precision": 0.0,
+            "context_precision": 1.0,
             "retrieved_pages": [
                 "2",
                 "23",
@@ -51,10 +54,10 @@
                 "30"
             ],
             "gold_pages": [
-                "11",
-                "12",
-                "11",
-                "12"
+                "14",
+                "15",
+                "14",
+                "15"
             ]
         },
         {
@@ -79,6 +82,6 @@
     ],
     "scorecard": {
         "avg_faithfulness": 1.0,
-        "avg_context_precision": 0.5
+        "avg_context_precision": 1.0
     }
 }

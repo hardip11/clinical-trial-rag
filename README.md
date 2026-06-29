@@ -1,7 +1,6 @@
 # 🏥 Clinical Trial RAG Pipeline
-
-> **Regulatory-grade document intelligence for clinical trial protocols.**  
-> Hybrid semantic + keyword retrieval · Multi-agent audit · Confidence-scored answers · Quantitative evaluation
+**Regulatory-grade document intelligence for clinical trial protocols.**  
+Hybrid semantic + keyword retrieval · Multi-agent audit · Confidence-scored answers · Quantitative evaluation
 
 ---
 
@@ -9,14 +8,14 @@
 
 Clinical trial protocols are dense, table-heavy documents where a single misread number — a performance score threshold, a washout period, a contraceptive requirement — can delay a regulatory submission by months.
 
-This pipeline turns a raw protocol PDF into a **queryable, auditable knowledge system**:
+This pipeline turns a raw protocol PDF into a queryable, auditable knowledge system:
 
 | Property | Implementation |
-|----------|----------------|
-| **Accuracy** | PubMedBERT embeddings understand medical synonyms |
-| **Completeness** | Hybrid BM25 + semantic retrieval catches what either alone misses |
-| **Traceability** | Every answer is linked back to source pages |
-| **Safety** | Deterministic audit layer flags threshold violations before outputs are trusted |
+|---|---|
+| Accuracy | PubMedBERT embeddings understand medical synonyms |
+| Completeness | Hybrid BM25 + semantic retrieval catches what either alone misses |
+| Traceability | Every answer is linked back to source pages |
+| Safety | Deterministic audit layer flags threshold violations before outputs are trusted |
 
 ---
 
@@ -68,15 +67,16 @@ BM25 Retriever       FAISS Vector Store
 clinical-trial-rag/
 ├── main.py                      ← run this for the full interactive pipeline
 ├── src/
-│   ├── prompts.py               ← all prompt templates (6 roles)
+│   ├── prompts.py               ← all prompt templates (7 roles)
 │   ├── ingestion.py             ← PDF loading + chunking + vector store
 │   ├── retrieval.py             ← HybridRetriever class
-│   └── evaluation.py            ← RegulatoryAuditor + RAGAS scoring
+│   └── evaluation.py           ← RegulatoryAuditor + RAGAS scoring
 ├── data/
 │   ├── Protocol.pdf             ← place your protocol PDF here
 │   ├── cache/                   ← auto-generated cache (gitignored)
-│   └── sample_output/           ← all pipeline outputs saved here
-├── .env                
+│   └── sample_output/          ← all pipeline outputs saved here
+│       └── example_extraction.json  ← sample output (synthetic data)
+├── .env
 ├── .gitignore
 └── requirements.txt
 ```
@@ -86,7 +86,6 @@ clinical-trial-rag/
 ## Quickstart
 
 ### 1. Clone and install
-
 ```bash
 git clone https://github.com/hardip11/clinical-trial-rag.git
 cd clinical-trial-rag
@@ -94,7 +93,6 @@ pip install -r requirements.txt
 ```
 
 ### 2. Set your API token
-
 ```bash
 cp .env.example .env
 # Edit .env and add your Hugging Face token
@@ -102,11 +100,9 @@ cp .env.example .env
 ```
 
 ### 3. Add your protocol PDF
-
 Place your clinical trial protocol PDF at `data/Protocol.pdf`.
 
 ### 4. Run the pipeline
-
 ```bash
 python main.py
 ```
@@ -132,7 +128,7 @@ Runs all 4 phases automatically, then enters an interactive Q&A session. All out
 **All outputs saved automatically:**
 
 | File | Contents |
-|------|----------|
+|---|---|
 | `extraction_timestamp.json` | Structured criteria extracted from the protocol |
 | `audit_report_timestamp.json` | Full audit findings from both agents |
 | `risk_flags_timestamp.json` | Regulatory risk flags with suggested fixes |
@@ -160,17 +156,21 @@ Extracts clinical criteria as schema-constrained JSON. A sanitizer strips markdo
 A Devil's Advocate agent that scans the protocol for language that could cause regulatory delay: ambiguous phrasing, missing specificity, or potential ICH/FDA guideline conflicts. Each finding includes a suggested fix.
 
 ### Phase 4 · Quantitative Evaluation
-Runs a golden-dataset test suite scoring faithfulness (no hallucinations) and context precision (retriever found the right source pages).
+Runs a golden-dataset test suite scoring faithfulness and context precision.
+
+> **Methodology note:** Faithfulness is measured via keyword-term matching (checking whether critical domain terms appear in the model's response). This serves as a lightweight hallucination proxy suitable for benchmarking pipeline changes. It is **not** equivalent to LLM-as-judge entailment scoring. In a production deployment, replace `run_ragas_style_eval()` with an LLM judge that checks whether each claim in the response is entailed by the retrieved context. Context precision measures whether the retriever surfaced at least one gold-standard page — a retrieval metric that is exact regardless of evaluation method.
 
 **Results on the CAMPFIRE protocol:**
 
-| Query | Faithfulness | Context Precision |
-|-------|-------------|-------------------|
+| Query | Faithfulness\* | Context Precision |
+|---|---|---|
 | Performance scores (§6.1) | 100% | 100% |
 | Study rationale | 100% | 100% |
 | End of Study definition | 100% | 100% |
 | Organ transplant exclusion | 100% | 100% |
 | **Average** | **100%** | **100%** |
+
+*\*Faithfulness scored via keyword-term matching proxy. See methodology note above.*
 
 ---
 
@@ -187,12 +187,13 @@ All prompts live in `src/prompts.py`. Each follows the same structure:
 ```
 
 | Template | Purpose |
-|----------|---------|
+|---|---|
 | `CLINICAL_QA_PROMPT` | General protocol questions |
 | `JSON_EXTRACTION_PROMPT` | Single-record structured extraction |
 | `JSON_LIST_EXTRACTION_PROMPT` | Multi-record extraction (all age groups) |
 | `AMBIGUITY_DETECTION_PROMPT` | Regulatory risk flagging |
 | `CONFIDENCE_SCORED_PROMPT` | Answer + uncertainty quantification |
+| `RETRY_EXTRACTION_PROMPT` | Fallback for malformed JSON responses |
 | `AUDITOR_REVIEW_PROMPT` | LLM second-pass verification |
 
 ---
@@ -208,7 +209,7 @@ All prompts live in `src/prompts.py`. Each follows the same structure:
 ## Dependencies
 
 | Package | Role |
-|---------|------|
+|---|---|
 | `langchain` + `langchain-community` | RAG orchestration |
 | `langchain-huggingface` | HF model integration |
 | `faiss-cpu` | Vector similarity search |
@@ -223,5 +224,4 @@ All prompts live in `src/prompts.py`. Each follows the same structure:
 ---
 
 ## License
-
 MIT

@@ -1,0 +1,26 @@
+{
+    "timestamp": "20240615_143022",
+    "deterministic_audit": {
+        "is_compliant": true,
+        "recommendation": "approve",
+        "findings": [
+            {
+                "status": "PASS",
+                "metric": "Lansky Performance Score",
+                "score": 50,
+                "message": "Lansky Performance Score (50) meets the safety threshold."
+            },
+            {
+                "status": "PASS",
+                "metric": "Karnofsky Performance Score",
+                "score": 50,
+                "message": "Karnofsky Performance Score (50) meets the safety threshold."
+            }
+        ]
+    },
+    "llm_audit": {
+        "verified": true,
+        "issues": [],
+        "recommendation": "approve"
+    }
+}

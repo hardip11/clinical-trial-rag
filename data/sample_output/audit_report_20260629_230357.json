@@ -1,5 +1,5 @@
 {
-    "timestamp": "20260629_222512",
+    "timestamp": "20260629_230357",
     "deterministic_audit": {
         "is_compliant": true,
         "recommendation": "approve",
@@ -18,10 +18,5 @@
             }
         ]
     },
-    "llm_audit": {
-        "field": "age_group",
-        "expected": ">=16",
-        "found": ">=16",
-        "severity": "info"
-    }
+    "llm_audit": {}
 }

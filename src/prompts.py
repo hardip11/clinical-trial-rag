@@ -6,6 +6,15 @@ Design principles:
 - Every prompt has explicit output format instructions
 - Every prompt has a fallback instruction ("if not in context, say so")
 - JSON prompts enforce strict schema and forbid markdown fences
+
+Templates (7 total):
+    1. CLINICAL_QA_PROMPT            — general protocol questions
+    2. JSON_EXTRACTION_PROMPT        — single-record structured extraction
+    3. JSON_LIST_EXTRACTION_PROMPT   — multi-record extraction
+    4. AMBIGUITY_DETECTION_PROMPT    — regulatory risk flagging
+    5. CONFIDENCE_SCORED_PROMPT      — answer + uncertainty quantification
+    6. RETRY_EXTRACTION_PROMPT       — fallback for malformed JSON responses
+    7. AUDITOR_REVIEW_PROMPT         — LLM second-pass verification
 """
 
 from langchain_core.prompts import PromptTemplate
@@ -37,6 +46,8 @@ Think step by step:
 1. Identify the relevant section(s) in the context above
 2. Extract exact values or criteria, preserving any age/group qualifiers
 3. Note page numbers if available in the metadata
+4. If you found a value in step 2, your final answer MUST reflect that value. Do NOT say "not specified" if you already extracted the answer above.                                                  
+                                                
 
 Answer:""")
 
@@ -169,6 +180,35 @@ Question: {question}
 
 # ---------------------------------------------------------------------------
 # 6. Audit / Regulatory Rulebook Prompt
+#    Used by the Auditor Agent to re-examine a prior extraction.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# 7. Retry Extraction Prompt
+#    Fallback used when JSON_LIST_EXTRACTION_PROMPT returns malformed output.
+#    Stricter wording, truncated context, and an explicit "nothing else" rule
+#    to recover from LLMs that add prose or markdown fences on first pass.
+# ---------------------------------------------------------------------------
+
+RETRY_EXTRACTION_PROMPT = PromptTemplate.from_template("""Output ONLY a valid JSON array. Nothing else. No text before or after. No markdown.
+
+SCHEMA:
+[
+  {{
+    "age_group": "<16" or ">=16",
+    "metric": string,
+    "minimum_score": integer,
+    "section": string
+  }}
+]
+
+Extract all performance score requirements from this context:
+{context}
+""")
+
+
+# ---------------------------------------------------------------------------
+# 7. Audit / Regulatory Rulebook Prompt
 #    Used by the Auditor Agent to re-examine a prior extraction.
 # ---------------------------------------------------------------------------
 

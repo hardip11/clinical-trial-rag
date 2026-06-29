@@ -1,5 +1,6 @@
 {
-    "timestamp": "20260629_220738",
+    "timestamp": "20260629_230357",
+    "scoring_note": "Faithfulness uses keyword-term matching as a hallucination proxy. For production, replace with an LLM-as-judge entailment prompt.",
     "results": [
         {
             "query": "What are the specific Lansky and Karnofsky score requirements in Section 6.1?",

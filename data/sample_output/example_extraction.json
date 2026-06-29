@@ -1,0 +1,14 @@
+[
+    {
+        "age_group": "<16",
+        "metric": "Lansky Performance Score",
+        "minimum_score": 50,
+        "section": "6.1"
+    },
+    {
+        "age_group": ">=16",
+        "metric": "Karnofsky Performance Score",
+        "minimum_score": 50,
+        "section": "6.1"
+    }
+]

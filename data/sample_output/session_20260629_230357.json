@@ -1,0 +1,7 @@
+[
+    {
+        "query": "What is the minimum Lansky score required for patients under 16?",
+        "answer": "Based on the provided context, I will answer the question step by step.\n\n1. Identify the relevant section(s) in the context above:\nThe relevant section is \"The patient has a Lansky (<16 years of age; Lansky et al. 1987) or Karnofsky (\u226516 years of age; Karnofsky et al. 1948) performance score of at least 50.\"\n\n2. Extract exact values or criteria, preserving any age/group qualifiers:\nThe extracted value is: \"at least 50\" for patients under 16 years of age.\n\n3. Note page numbers if available in the metadata:\nPage number: [4]\n\n4. If you found a value in step 2, your final answer MUST reflect that value. Do NOT say \"not specified\" if you already extracted the answer above.\n\nAnswer: The minimum Lansky score required for patients under 16 is at least 50.",
+        "confidence": "N/A"
+    }
+]

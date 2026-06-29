@@ -1,0 +1,20 @@
+[
+    {
+        "issue_type": "ambiguity",
+        "quote": "adequate organ function as determined by the investigator",
+        "concern": "No objective thresholds defined. 'Adequate' is open to investigator interpretation, creating inconsistency across sites.",
+        "suggested_fix": "Replace with specific lab value thresholds (e.g., ALT <= 3x ULN, creatinine <= 1.5x ULN) as per ICH E6 R2 guidance."
+    },
+    {
+        "issue_type": "missing_specificity",
+        "quote": "recently received systemic corticosteroids",
+        "concern": "'Recently' lacks a defined timeframe. FDA reviewers routinely flag washout periods without explicit day/week counts.",
+        "suggested_fix": "Define a specific washout window (e.g., 'within 14 days prior to enrollment')."
+    },
+    {
+        "issue_type": "guideline_conflict",
+        "quote": "women of childbearing potential must use contraception",
+        "concern": "No definition of 'adequate contraception' provided. ICH E8 R1 requires specifying acceptable method categories and duration relative to last dose.",
+        "suggested_fix": "Add a contraception definition section listing acceptable methods and specify duration of use post-treatment (e.g., 6 months after last dose)."
+    }
+]
